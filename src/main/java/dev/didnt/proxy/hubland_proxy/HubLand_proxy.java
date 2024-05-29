@@ -6,10 +6,9 @@ import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.proxy.ProxyServer;
+import dev.didnt.proxy.hubland_proxy.commands.BuyCommand;
 import dev.didnt.proxy.hubland_proxy.commands.HelpCommand;
 import org.slf4j.Logger;
-import org.yaml.snakeyaml.Yaml;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,9 +16,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 @Plugin(
-        id = "hubland_proxy",
-        name = "HubLand Proxy",
-        version = "1.0-SNAPSHOT",
+        id = "hubland",
+        name = "hubland",
         authors = {"Didnt_"}
 )
 public class HubLand_proxy {
@@ -31,14 +29,14 @@ public class HubLand_proxy {
     public HubLand_proxy(ProxyServer server, Logger logger) {
         this.server = server;
         this.logger = logger;
-        configPath = "./plugins/HubLand/config.toml";
+        this.configPath = "./plugins/hubland/config.toml";
 
         logger.info("HubLand Proxy has been enabled.");
     }
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
-        final var config = Path.of("/plugins/HubLand/config.toml");
+        final var config = Path.of("plugins/hubland/config.toml");
         if(!Files.exists(config)) {
             try (final var configTemplate = getClass().getResourceAsStream("/config.toml")) {
                 Files.createDirectories(config.getParent());
@@ -65,13 +63,10 @@ public class HubLand_proxy {
                 """);
 
         new HelpCommand(server, this, logger);
+        new BuyCommand(server, this, logger);
     }
 
-    public static String getConfigPath() {
-        return configPath;
-    }
-
-    public static Toml getConfig(){
-        return new Toml().read(new File(getConfigPath()));
+    public Toml getConfig() {
+        return new Toml().read(new File(configPath));
     }
 }

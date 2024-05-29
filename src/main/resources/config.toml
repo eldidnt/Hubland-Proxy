@@ -1,2 +1,5 @@
-[messages]
-    help = "helpmessage"
+[general]
+prefix = "§9[*]"
+
+[help.command]
+message = ""
